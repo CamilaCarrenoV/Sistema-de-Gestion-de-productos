@@ -24,7 +24,7 @@ REQUISITOS
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
-    private  static ArrayList<Producto> productos = new ArrayList<>();
+    private static ArrayList<Producto> productos = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -58,11 +58,11 @@ public class Main {
                     break;
 
                 case 4:
-                    //editProduct();
+                    editProduct();
                     break;
 
                 case 5:
-                    //deleteProduct();
+                    deleteProduct();
                     break;
 
                 case 6:
@@ -77,7 +77,7 @@ public class Main {
 
     }
 
-    private static void addProduct(){
+    private static void addProduct() {
         System.out.println("Ingresa el nombre del producto:");
         String name = scanner.nextLine();
         System.out.println("Ingresa precio:");
@@ -86,7 +86,7 @@ public class Main {
         int stock = scanner.nextInt();
 
         if (value >= 0 && stock >= 0) {
-            Producto nuevo = new Producto(name,value, stock);
+            Producto nuevo = new Producto(name, value, stock);
             productos.add(nuevo);
             System.out.println("Producto añadido con ID: " + nuevo.getId());
         } else {
@@ -95,7 +95,7 @@ public class Main {
     }
 
     private static void listsProducts() {
-        if (productos.isEmpty()){
+        if (productos.isEmpty()) {
             System.out.println("No hay productos en el inventario.");
         } else {
             System.out.println("\nLista de productos:");
@@ -110,5 +110,80 @@ public class Main {
         int id = scanner.nextInt();
 
         Producto producto = productos.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+        if (producto != null) {
+            System.out.print("Cantidad a vender");
+            int cantidad = scanner.nextInt();
+            producto.vender(cantidad);
+        } else {
+            System.out.println("No se encontró producto con ese ID.");
+        }
     }
+//Desarrollo de Kuyen
+    private static void editProduct() {
+        System.out.println("Ingresa el ID del producto que quieres editar:");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Producto producto = productos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (producto != null) {
+            System.out.println("Producto encontrado:");
+            producto.mostrar();
+
+            System.out.println("\nIngresa el nuevo nombre (O presiona Enter para no cambiar):");
+            String NuevoNombre = scanner.nextLine();
+
+            System.out.println("Ingresa el nuevo precio (O -1 para no cambiar):");
+            int NuevoValor = scanner.nextInt();
+
+            System.out.println("Ingresa el nuevo stock (O -1 para no cambiar):");
+            int NuevoStock = scanner.nextInt();
+            scanner.nextLine();
+
+            if (!NuevoNombre.isEmpty()) {
+                producto.setNombre(NuevoNombre);
+            }
+            if (NuevoValor >= 0) {
+                producto.setPrecio(NuevoValor);
+            }
+            if (NuevoStock >= 0) {
+                producto.setStock(NuevoStock);
+            }
+
+            System.out.println("El producto fue actualizado de forma exitosa.");
+        } else {
+            System.out.println("No se encontró ningún producto con ese ID.");
+        }
+    }
+//Desarrollo de Kuyen
+    private static void deleteProduct() {
+        System.out.println("Ingresa el ID del producto que quieres eliminar:");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Producto producto = productos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (producto != null) {
+            System.out.println("Producto encontrado:");
+            producto.mostrar();
+            System.out.println("¿Seguro que quieres eliminarlo? (si/no): ");
+            String confirmacion = scanner.nextLine();
+
+            if (confirmacion.equalsIgnoreCase("si")) {
+                productos.remove(producto);
+                System.out.println("El producto fue eliminado correctamente.");
+            } else {
+                System.out.println("El producto no fue eliminado.");
+            }
+        } else {
+            System.out.println("No se encontró ningún producto con ese ID.");
+        }
+    }
+
 }
